@@ -7,9 +7,6 @@
 
 import 'dart:ui';
 
-import 'package:clickable_text/clickable_pattern.dart';
-import 'package:clickable_text/clickable_text.dart';
-import 'package:clickable_text/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

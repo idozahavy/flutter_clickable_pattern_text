@@ -5,13 +5,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "clickable_text",
+			"name": "clickable_pattern_text",
 			"request": "launch",
 			"type": "dart",
 			"cwd": "example"
 		},
 		{
-			"name": "clickable_text (profile mode)",
+			"name": "clickable_pattern_text (profile mode)",
 			"request": "launch",
 			"type": "dart",
 			"flutterMode": "profile",

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:clickable_text/clickable_text.dart';
+import 'package:clickable_pattern_text/clickable_pattern_text.dart';
 
 void main() {
   runApp(MyApp());
@@ -94,7 +94,37 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ClickableText('123456789',
+            ClickablePatternText(
+              'my phone is 123456789 or 987654321, my friends phone is:456321987 ',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+              // clickableDefaultStyle: TextStyle(
+              //	color: Colors.blue, decoration: TextDecoration.underline),
+              patterns: [
+                ClickablePattern(
+                    name: 'phone',
+                    pattern: r'(?<=[ ,.:]|^)\d{9}(?=[ ,.]|$)',
+                    onClicked: (phone, clickablePattern) => print(phone),
+                    style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline)),
+              ],
+            ),
+            ClickablePatternText(
+              'my email is a@b.com you can click it or this a@c.com ',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+              clickableDefaultStyle: TextStyle(
+                  color: Colors.blue, decoration: TextDecoration.underline),
+              patterns: [
+                ClickablePattern(
+                    name: 'url',
+                    pattern: r'\w+@\w+.\w+',
+                    onClicked: (url, clickablePattern) => print(url),
+                    style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline)),
+              ],
+            ),
+            ClickablePatternText('123456789',
                 style: TextStyle(color: Colors.black, fontSize: 16),
                 patterns: [
                   ClickablePattern(
@@ -103,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onClicked: (text, clickablePattern) => print(text),
                   )
                 ]),
-            ClickableText(
+            ClickablePatternText(
               'You have pushed the button this many times: '
               "'"
               '054-669-5220'

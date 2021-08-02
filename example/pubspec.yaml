@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  clickable_text:
+  clickable_pattern_text:
     path: ../
   flutter_test:
     sdk: flutter

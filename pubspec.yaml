@@ -1,9 +1,10 @@
-name: clickable_text
-description: A new Flutter project.
+name: clickable_pattern_text
+description: Clickable patternable text widget.
+repository: https://github.com/idozahavy/flutter_clickable_pattern_text
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+# publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -36,24 +37,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-#   plugin:
-#     platforms:
-#       android:
-#         package: com.example.clickable_text
-#         pluginClass: ClickableText
-#       ios:
-#         pluginClass: ClickableText
-#       web:
-#         pluginClass: ClickableText
-#         fileName: clickable_text.dart
-#       linux:
-#         pluginClass: ClickableText
-#       macos:
-#         pluginClass: ClickableText
-#       windows:
-#         pluginClass: ClickableText
-
-
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

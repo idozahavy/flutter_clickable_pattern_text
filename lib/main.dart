@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:clickable_text/clickable_text.dart';
+import 'package:clickable_pattern_text/clickable_pattern_text.dart';
 
 void main() {
   runApp(MyApp());
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ClickableText('123456789',
+            ClickablePatternText('123456789',
                 style: TextStyle(color: Colors.black, fontSize: 16),
                 patterns: [
                   ClickablePattern(
@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onClicked: (text, clickablePattern) => print(text),
                   ),
                 ]),
-            ClickableText(
+            ClickablePatternText(
               'You have pushed the button this many times: '
               "'"
               '123-456-7890'

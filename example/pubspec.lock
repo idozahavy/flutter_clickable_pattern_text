@@ -29,7 +29,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  clickable_text:
+  clickable_pattern_text:
     dependency: "direct dev"
     description:
       path: ".."

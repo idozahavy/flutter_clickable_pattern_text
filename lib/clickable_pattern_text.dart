@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-import 'package:clickable_text/clickable_pattern.dart';
+import 'package:clickable_pattern_text/clickable_pattern.dart';
 
 export 'clickable_pattern.dart';
 
-class ClickableText extends StatelessWidget {
+class ClickablePatternText extends StatelessWidget {
   final String text;
   final TextStyle? style;
   final TextStyle? clickableDefaultStyle;
@@ -12,7 +12,7 @@ class ClickableText extends StatelessWidget {
   final bool softWrap;
   final int? maxLines;
   final TextOverflow overflow;
-  ClickableText(
+  ClickablePatternText(
     this.text, {
     Key? key,
     List<ClickablePattern>? patterns,
