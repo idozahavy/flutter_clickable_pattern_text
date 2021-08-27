@@ -1,3 +1,4 @@
+import 'package:clickable_pattern_text/text_canvas/span_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:clickable_pattern_text/clickable_pattern_text.dart';
 
