@@ -6,8 +6,9 @@ typedef PatternClicked = void Function(
 class ClickablePattern {
   final String name;
   final String pattern;
+  final bool enabled;
   final TextStyle? style;
-  final PatternClicked onClicked;
+  final PatternClicked? onClicked;
   final InlineSpan Function(String text, ClickablePattern pattern)? spanBuilder;
 
   /// Pattern class used by ClickableText widget for pattern finding,
@@ -33,7 +34,8 @@ class ClickablePattern {
   const ClickablePattern({
     required this.name,
     required this.pattern,
-    required this.onClicked,
+    this.onClicked,
+    this.enabled = true,
     this.style,
     this.spanBuilder,
   });

@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:clickable_pattern_text/clickable_pattern.dart';
 
 export 'clickable_pattern.dart';
+export 'package:clickable_pattern_text/text_canvas/text_canvas.dart';
+export 'package:clickable_pattern_text/text_canvas/span_handler.dart';
 
 class ClickablePatternText extends StatelessWidget {
   final String text;
@@ -100,7 +102,7 @@ class ClickablePatternText extends StatelessWidget {
       return TextSpan(
         recognizer: TapGestureRecognizer()
           ..onTap = () {
-            ctt.clickablePattern?.onClicked(
+            ctt.clickablePattern?.onClicked?.call(
               ctt.text,
               ctt.clickablePattern ?? ClickablePattern.error,
             );
@@ -118,6 +120,7 @@ class ClickablePatternText extends StatelessWidget {
     List<_ClickableTypeText> typeTexts = [_ClickableTypeText(text)];
     for (var pIndex = 0; pIndex < patterns.length; pIndex++) {
       var clickablePattern = patterns[pIndex];
+      if (!clickablePattern.enabled) continue;
       var regPattern = RegExp(clickablePattern.pattern);
       for (var ttIndex = 0; ttIndex < typeTexts.length; ttIndex++) {
         var typeText = typeTexts[ttIndex];
