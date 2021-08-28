@@ -47,8 +47,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
   void _incrementCounter() {
     // setState(() {
     //   // This call to setState tells the Flutter framework that something has
@@ -60,12 +58,20 @@ class _MyHomePageState extends State<MyHomePage> {
     // });
     // textCanvas2Key.currentState
     //     .ensureVisible(searchSpan, duration: Duration(seconds: 1), offset: 0);
-    richCanvas2Key.currentState
-        .ensureVisible(searchSpan, duration: Duration(seconds: 1), offset: 0);
+    // richCanvas2Key.currentState.ensureVisible(
+    //   searchSpan,
+    //   alignment: 0,
+    //   duration: Duration(seconds: 1),
+    //   offset: 0,
+    // );
+    cpt1Key.currentState
+        .ensureVisible(cpt1Span, duration: Duration(seconds: 1), alignment: 1);
   }
 
   final richCanvas2Key = GlobalKey<RichTextPositionerState>();
-  final textCanvas2Key = GlobalKey<TextCanvas2State>();
+  final cpt1Key = GlobalKey<ClickablePatternTextState>();
+
+  InlineSpan cpt1Span;
   InlineSpan searchSpan;
 
   @override
@@ -82,140 +88,96 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ListView(
-        children: [
-          Container(height: 200),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(height: 200),
 
-          RichTextPositioner(
-            key: richCanvas2Key,
-            text: TextSpan(
-              text: '1 fd23 234fds fds' * 200,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-              children: [
-                // WidgetSpan(
-                //   child: SizedBox(width: 40, height: 40),
-                // ),
-                searchSpan = TextSpan(
-                  text: 'gg',
-                  style: TextStyle(
-                    background: Paint()..color = Colors.black,
+            RichTextPositioner(
+              key: richCanvas2Key,
+              text: TextSpan(
+                text: '1 fd23 234fds fds' * 200,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+                children: [
+                  // WidgetSpan(
+                  //   child: SizedBox(width: 40, height: 40),
+                  // ),
+                  searchSpan = TextSpan(
+                    text: 'gg',
+                    style: TextStyle(
+                      background: Paint()..color = Colors.black,
+                    ),
                   ),
+                  TextSpan(
+                    text: '5d5ew we5r64d6fs a5fd 21312 dsa' * 200,
+                  ),
+                  searchSpan,
+                ],
+              ),
+            ),
+            ClickablePatternText(
+              'my phone is 123456789 or 987654321, my friends phone is:456321987 ' *
+                  50,
+              key: cpt1Key,
+              style: TextStyle(color: Colors.black, fontSize: 16),
+              // clickableDefaultStyle: TextStyle(
+              //	color: Colors.blue, decoration: TextDecoration.underline),
+              patterns: [
+                ClickablePattern(
+                  name: 'phone',
+                  pattern: r'(?<=[ ,.:]|^)\d{9}(?=[ ,.]|$)',
+                  onClicked: (phone, clickablePattern) => print(phone),
+                  style: TextStyle(
+                      color: Colors.blue, decoration: TextDecoration.underline),
+                  onSpanCreation: (span, index) {
+                    cpt1Span ??= span;
+                    if ((index + 1) % 50 == 0) {}
+                  },
                 ),
-                TextSpan(
-                  text: '5d5ew we5r64d6fs a5fd 21312 dsa' * 200,
-                ),
-                searchSpan,
               ],
             ),
-          ),
-          TextCanvas2(
-            key: textCanvas2Key,
-            text: TextSpan(
-              text: '1 fd23 234fds fds' * 200,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-              children: [
-                // WidgetSpan(
-                //   child: SizedBox(width: 40, height: 40),
-                // ),
-                // searchSpan =
-                TextSpan(
-                  text: 'gg',
-                  style: TextStyle(
-                    background: Paint()..color = Colors.black,
-                  ),
-                ),
-                TextSpan(
-                  text: '5d5ew we5r64d6fs a5fd 21312 dsa' * 200,
-                ),
-              ],
-            ),
-          ),
-          // TextCanvas(
-          //   span: TextSpanHandler(
-          //       text:
-          //           'ראש הממשלה ונשיא ארצות הברית יוועדו ברקע מתקפת הטרור באפגניסטן, שגבתה את חייהם של 13 חיילים אמריקנים. מוקדם יותר, שלח בנט תנחומים למדינה: "עומדים לצדכם בשעה קשה זו, כפי שאתם עומדים לצד ישראל לאורך השנים". במוקד הפגישה בין השניים - המתיחות מול איראן' *
-          //               10,
-          //       style: TextStyle(color: Colors.black),
-          //       children: [
-          //         TextSpanHandler(
-          //             text: 'ggg',
-          //             style:
-          //                 TextStyle(background: Paint()..color = Colors.black),
-          //             onSpanPositioned: (
-          //               span,
-          //               // _,
-          //               __,
-          //             ) {
-          //               // textCanvasKey.currentState.ensureVisible(span,
-          //               //     duration: Duration(seconds: 1), offset: -10);
-          //             }),
-          //         TextSpanHandler(
-          //             text:
-          //                 'ראש הממשלה ונשיא ארצות הברית יוועדו ברקע מתקפת הטרור באפגניסטן, שגבתה את חייהם של 13 חיילים אמריקנים. מוקדם יותר, שלח בנט תנחומים למדינה: "עומדים לצדכם בשעה קשה זו, כפי שאתם עומדים לצד ישראל לאורך השנים". במוקד הפגישה בין השניים - המתיחות מול איראן' *
-          //                     200),
-          //       ]),
-          //   // relativePositionAncestorKey: listViewKey,
-          //   // relativePositionKey: firstChildKey,
-          //   key: textCanvasKey,
-          // ),
-          // ClickablePatternText(
-          //   'my phone is 123456789 or 987654321, my friends phone is:456321987 ',
-          //   style: TextStyle(color: Colors.black, fontSize: 16),
-          //   // clickableDefaultStyle: TextStyle(
-          //   //	color: Colors.blue, decoration: TextDecoration.underline),
-          //   patterns: [
-          //     ClickablePattern(
-          //         name: 'phone',
-          //         pattern: r'(?<=[ ,.:]|^)\d{9}(?=[ ,.]|$)',
-          //         onClicked: (phone, clickablePattern) => print(phone),
-          //         style: TextStyle(
-          //             color: Colors.blue,
-          //             decoration: TextDecoration.underline)),
-          //   ],
-          // ),
-          // ClickablePatternText(
-          //   'my email is a@b.com you can click it or this a@c.com ',
-          //   style: TextStyle(color: Colors.black, fontSize: 16),
-          //   clickableDefaultStyle: TextStyle(
-          //       color: Colors.blue, decoration: TextDecoration.underline),
-          //   patterns: [
-          //     ClickablePattern(
-          //         name: 'url',
-          //         pattern: r'\w+@\w+.\w+',
-          //         onClicked: (url, clickablePattern) => print(url),
-          //         style: TextStyle(
-          //             color: Colors.blue,
-          //             decoration: TextDecoration.underline)),
-          //   ],
-          // ),
-          // ClickablePatternText('123456789',
-          //     style: TextStyle(color: Colors.black, fontSize: 16),
-          //     patterns: [
-          //       ClickablePattern(
-          //         name: '',
-          //         pattern: r'[0-9]',
-          //         onClicked: (text, clickablePattern) => print(text),
-          //       )
-          //     ]),
-          // ClickablePatternText(
-          //   'You have pushed the button this many times: '
-          //   "'"
-          //   '054-669-5220'
-          //   "'"
-          //   ' 0546695220,0546695220\r0546695220,ido@t.co.il.org.234.sd',
-          //   style: Theme.of(context).textTheme.bodyText1,
-          //   clickableDefaultStyle: TextStyle(
-          //       color: Colors.blue, decoration: TextDecoration.underline),
-          // ),
-          // Text(
-          //   '$_counter',
-          //   style: Theme.of(context).textTheme.headline4,
-          // ),
-        ],
+            // ClickablePatternText(
+            //   'my email is a@b.com you can click it or this a@c.com ',
+            //   style: TextStyle(color: Colors.black, fontSize: 16),
+            //   clickableDefaultStyle: TextStyle(
+            //       color: Colors.blue, decoration: TextDecoration.underline),
+            //   patterns: [
+            //     ClickablePattern(
+            //         name: 'url',
+            //         pattern: r'\w+@\w+.\w+',
+            //         onClicked: (url, clickablePattern) => print(url),
+            //         style: TextStyle(
+            //             color: Colors.blue,
+            //             decoration: TextDecoration.underline)),
+            //   ],
+            // ),
+            // ClickablePatternText('123456789',
+            //     style: TextStyle(color: Colors.black, fontSize: 16),
+            //     patterns: [
+            //       ClickablePattern(
+            //         name: '',
+            //         pattern: r'[0-9]',
+            //         onClicked: (text, clickablePattern) => print(text),
+            //       )
+            //     ]),
+            // ClickablePatternText(
+            //   'You have pushed the button this many times: '
+            //   "'"
+            //   '054-669-5220'
+            //   "'"
+            //   ' 0546695220,0546695220\r0546695220,ido@t.co.il.org.234.sd',
+            //   style: Theme.of(context).textTheme.bodyText1,
+            //   clickableDefaultStyle: TextStyle(
+            //       color: Colors.blue, decoration: TextDecoration.underline),
+            // ),
+            // Text(
+            //   '$_counter',
+            //   style: Theme.of(context).textTheme.headline4,
+            // ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,

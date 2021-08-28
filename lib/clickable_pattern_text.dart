@@ -1,88 +1,46 @@
+import 'package:clickable_pattern_text/index.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:clickable_pattern_text/clickable_pattern.dart';
 
 export 'clickable_pattern.dart';
-export 'package:clickable_pattern_text/text_canvas/text_canvas.dart';
-export 'package:clickable_pattern_text/text_canvas/span_handler.dart';
+export 'rich_text_positioner/rich_text_positioner.dart';
 
-class ClickablePatternText extends StatelessWidget {
+class ClickablePatternText extends StatefulWidget {
   final String text;
   final TextStyle? style;
   final TextStyle? clickableDefaultStyle;
-  final List<ClickablePattern> patterns;
+  final List<ClickablePattern> _patterns;
   final bool softWrap;
   final int? maxLines;
   final TextOverflow overflow;
   ClickablePatternText(
     this.text, {
+    List<ClickablePattern> patterns = const [],
     Key? key,
-    List<ClickablePattern>? patterns,
     this.style,
     this.softWrap = true,
     this.maxLines,
     this.overflow = TextOverflow.clip,
     this.clickableDefaultStyle,
-  })  : patterns = patterns ?? patternDefaults,
+  })  : _patterns = patterns,
         super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    List<_ClickableTypeText> ctts = getClickableTexts(text, patterns);
-
-    return RichText(
-      softWrap: softWrap,
-      maxLines: maxLines,
-      overflow: overflow,
-      text: TextSpan(
-        style: style,
-        children: _clickableTypeTextsToTextSpans(ctts, clickableDefaultStyle),
-      ),
-    );
-  }
-
-  static List<ClickablePattern> patternDefaults = [
-    const ClickablePattern(
-      name: 'cellphone_1',
-      pattern: r'(?<=[ ,.:=\a\e\f\n\r\t"'
-          r"'"
-          r']|^)'
-          r'\d{3}-?\d{3}-?\d{4}'
-          r'(?=[ ,.\a\e\f\n\r\t"'
-          r"'"
-          r']|$)',
-      onClicked: _nothingOnClicked,
-    ),
-    const ClickablePattern(
-      name: 'email_1',
-      pattern: r'(?<=[ ,.:=\a\e\f\n\r\t"'
-          r"'"
-          r']|^)'
-          r'(?:[a-z0-9!#$%&'
-          r"'"
-          r'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'
-          r"'"
-          r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])'
-          r'(?=[ ,.\a\e\f\n\r\t"'
-          r"'"
-          r']|$)',
-      onClicked: _nothingOnClicked,
-    ),
-  ];
-
-  static void _nothingOnClicked(
-      String text, ClickablePattern clickablePattern) {}
+  ClickablePatternTextState createState() => ClickablePatternTextState();
 
   static List<InlineSpan> _clickableTypeTextsToTextSpans(
     List<_ClickableTypeText> ctts, [
     TextStyle? defaultClickableStyle,
   ]) {
     var spans = <InlineSpan>[];
+    int clickableIndex = 0;
     for (var i = 0; i < ctts.length; i++) {
       var ctt = ctts[i];
       InlineSpan span;
       if (ctt.clickable) {
         span = _createClickableTextSpan(ctt, defaultClickableStyle);
+        ctt.clickablePattern?.onSpanCreation?.call(span, clickableIndex++);
       } else {
         span = TextSpan(text: ctt.text);
       }
@@ -113,7 +71,8 @@ class ClickablePatternText extends StatelessWidget {
     }
   }
 
-  static List<_ClickableTypeText> getClickableTexts(
+  // TODO extract to other class that constructs this type and converts it to spans
+  static List<_ClickableTypeText> _getClickableTexts(
     String text,
     List<ClickablePattern> patterns,
   ) {
@@ -153,6 +112,56 @@ class ClickablePatternText extends StatelessWidget {
       }
     }
     return typeTexts;
+  }
+}
+
+class ClickablePatternTextState extends State<ClickablePatternText> {
+  final _richTextPositionerKey = GlobalKey<RichTextPositionerState>();
+  @override
+  Widget build(BuildContext context) {
+    List<_ClickableTypeText> ctts =
+        ClickablePatternText._getClickableTexts(widget.text, widget._patterns);
+
+    return RichTextPositioner(
+      key: _richTextPositionerKey,
+      softWrap: widget.softWrap,
+      maxLines: widget.maxLines,
+      overflow: widget.overflow,
+      text: TextSpan(
+        style: widget.style,
+        children: ClickablePatternText._clickableTypeTextsToTextSpans(
+            ctts, widget.clickableDefaultStyle),
+      ),
+    );
+  }
+
+  Future<void> ensureVisible(
+    TextSpan span, {
+    double alignment = 0.0,
+    Duration duration = Duration.zero,
+    Curve curve = Curves.ease,
+    ScrollPositionAlignmentPolicy alignmentPolicy =
+        ScrollPositionAlignmentPolicy.explicit,
+    double offset = 0,
+    int spanIndex = 0,
+    int textBoxIndex = 0,
+    bool Function(List<TextBox> spanBoxes, int index, int length)? spanSelector,
+    bool Function(TextBox textBox, int index, int length)? textBoxSelector,
+    double Function(TextBox textBox, double alignment)? offsetSelector,
+  }) {
+    return _richTextPositionerKey.currentState!.ensureVisible(
+      span,
+      alignment: alignment,
+      alignmentPolicy: alignmentPolicy,
+      curve: curve,
+      duration: duration,
+      offset: offset,
+      offsetSelector: offsetSelector,
+      spanIndex: spanIndex,
+      spanSelector: spanSelector,
+      textBoxIndex: textBoxIndex,
+      textBoxSelector: textBoxSelector,
+    );
   }
 }
 
